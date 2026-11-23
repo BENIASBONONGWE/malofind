@@ -1,0 +1,185 @@
+MALOFIND PROJECT - TEST SPECIFICATION AND TEST CASES
+Mobile Applications Development Project – 4th Year Test Design Submission
+Student Name: Benias Bonongwe
+Student ID: BED-COM-28-19
+Application Name: MaloFind: An Android-Based Real Estate and Accommodation Finder for Malawi
+Target Platform: Android 14 / Android Studio
+Date: 20/10/2026
+Version: v1.0
+
+--------------------------------------------------
+Test Case 1: Successful User Login (Admin / Owner / Seeker)
+--------------------------------------------------
+Test Case ID: MF_AUTH_001
+Description: Verify that a registered user can log in with a valid email and password.
+Test Type: Positive
+Priority: High
+Prerequisites: The application is installed, and the user account is registered in Firebase Authentication and the required user profile information is available in Firestore.
+Test Data (Owner): Email: owner@malofind.com | Password: yamikani
+Test Data (Admin): Email: admin@malofind.com | Password: yamikani
+Test Data (Seeker): Email: seeker@example.com | Password: yamikani
+Test Steps:
+1. Launch the MaloFind application.
+2. Enter the registered email in the email field.
+3. Enter the correct password in the password field.
+4. Tap the "Sign In" button.
+Expected Result:
+- For Admin/Owner: User is navigated to the Admin/Owner Dashboard.
+- For Seeker: User is navigated to the Seeker Dashboard. User profile and available property listings are displayed correctly.
+Post-conditions: A user session is established, and the user remains logged in.
+
+--------------------------------------------------
+Test Case 2: Login with Empty Fields
+--------------------------------------------------
+Test Case ID: MF_AUTH_002
+Description: Verify that login is blocked when the email and password fields are left empty.
+Test Type: Negative
+Priority: High
+Prerequisites: The application is installed and the Login screen is open.
+Test Data: Email: (empty) | Password: (empty)
+Test Steps:
+1. Open the Login screen.
+2. Leave both the email and password fields empty.
+3. Tap the "Sign In" button.
+Expected Result: The error message "Please enter your email and password." is displayed, and the user remains on the Login screen.
+Post-conditions: No authentication request is sent, and no user session is created.
+
+--------------------------------------------------
+Test Case 3: Successful Property Submission by Owner
+--------------------------------------------------
+Test Case ID: MF_PROP_001
+Description: Verify that a logged-in property owner can submit a new property listing with its details and photos.
+Test Type: Positive
+Priority: High
+Prerequisites: The owner is logged in, and the required camera or gallery permissions have been granted.
+Test Data: Title: Modern Lilongwe Villa | Price: 350000.0 | City: Lilongwe | Bedrooms: 3 | Phone: 0999123456
+Test Steps:
+1. Open the Owner Dashboard.
+2. Tap "Add Property".
+3. Enter the property title, description, location, city, price and number of bedrooms.
+4. Select or capture property photos using the phone.
+5. Tap the "Submit Property" button.
+Expected Result: The success message "Property submitted successfully with photos!" is displayed. The property is saved in Firestore with a pending approval status.
+Post-conditions: The property appears in the owner's property list with a "Pending" approval status.
+
+--------------------------------------------------
+Test Case 4: Property Submission with Missing Required Fields
+--------------------------------------------------
+Test Case ID: MF_PROP_002
+Description: Verify that property submission is blocked when required fields are left blank.
+Test Type: Negative
+Priority: Medium
+Prerequisites: The owner is logged in and is on the Add Property screen.
+Test Data: Title: (empty) | Price: (empty) | City: Lilongwe
+Test Steps:
+1. Open the Add Property screen.
+2. Leave the title and price fields blank.
+3. Tap the "Submit Property" button.
+Expected Result: The error message "Please fill in all required fields, including phone number." is displayed, and the property is not submitted.
+Post-conditions: The owner remains on the Add Property screen, and the entered form data is preserved where applicable.
+
+--------------------------------------------------
+Test Case 5: Successful Property Search and Filtering
+--------------------------------------------------
+Test Case ID: MF_SEARCH_001
+Description: Verify that a seeker can search for and filter approved properties by location, property type and price.
+Test Type: Positive
+Priority: High
+Prerequisites: The seeker is logged in, and approved property listings exist in the database.
+Test Data: Search city: Lilongwe | Property type: House | Maximum price: 400000.0
+Test Steps:
+1. Open the Seeker Dashboard or Search screen.
+2. Enter "Lilongwe" in the search bar.
+3. Apply the "House" property-type filter.
+4. Set the maximum price to 400000.0.
+5. View the filtered property list.
+Expected Result: Only approved houses in Lilongwe that match the selected criteria and maximum price are displayed.
+Post-conditions: The seeker can select a result to view its full details and photos.
+
+--------------------------------------------------
+Test Case 6: Property Search with No Matching Results
+--------------------------------------------------
+Test Case ID: MF_SEARCH_002
+Description: Verify that the application displays an empty state when a search returns no matching properties.
+Test Type: Negative
+Priority: Low
+Prerequisites: The seeker is logged in and the Search screen is available.
+Test Data: Search query: NonExistentLocationXYZ
+Test Steps:
+1. Open the Search screen.
+2. Enter "NonExistentLocationXYZ" in the search field.
+3. View the search results area.
+Expected Result: An empty-state message indicating that no properties were found is displayed.
+Post-conditions: The seeker can clear the search query or change the search criteria.
+
+--------------------------------------------------
+Test Case 7: Admin Property Approval
+--------------------------------------------------
+Test Case ID: MF_ADMIN_001
+Description: Verify that an administrator can review and approve a pending property listing.
+Test Type: Positive
+Priority: High
+Prerequisites: The administrator is logged in, and at least one property is waiting for approval.
+Test Data: Pending property ID: prop_pending_01
+Test Steps:
+1. Open the Admin Dashboard.
+2. Tap "Property Approval".
+3. Select the view option for a pending property.
+4. Review the property details and owner-uploaded photos.
+5. Tap the "Approve" button.
+Expected Result: The property status changes to approved, and it is removed from the pending review queue. The approved property becomes available in seeker search results.
+Post-conditions: The property is active and available for seekers to view.
+
+--------------------------------------------------
+Test Case 8: Admin Property Rejection
+--------------------------------------------------
+Test Case ID: MF_ADMIN_002
+Description: Verify that an administrator can reject an inappropriate or invalid pending property listing.
+Test Type: Negative
+Priority: Medium
+Prerequisites: The administrator is logged in, and a pending property listing exists.
+Test Data: Property ID: a pending property selected for rejection
+Test Steps:
+1. Open the Admin Dashboard.
+2. Open the Property Approval screen.
+3. Tap the reject or close option on a pending property.
+4. Confirm the rejection in the confirmation dialog.
+Expected Result: The property is rejected and removed from the review queue.
+Post-conditions: The rejected property is no longer available for seekers to view.
+
+--------------------------------------------------
+Test Case 9: Seeker Request Submission and Owner Acceptance
+--------------------------------------------------
+Test Case ID: MF_REQ_001
+Description: Verify that a seeker can submit a rental or purchase request and that the property owner can accept it.
+Test Type: Positive
+Priority: High
+Prerequisites: Seeker and owner accounts exist, the seeker can log in, and an approved property is available.
+Test Data: Message: "I am interested in renting this property." | Occupants: 2
+Test Steps:
+1. Log in as a seeker and open the details of an approved property.
+2. Tap "Request Property".
+3. Enter the required request details.
+4. Submit the request.
+5. Log in as the property owner.
+6. Open "Owner Requests" and view the enquiry.
+7. Tap "Accept" on the request.
+Expected Result: The request status changes to "Approved" or "Accepted" and the updated status is visible to the seeker and owner.
+Post-conditions: The accepted request is stored in Firestore with its updated status.
+
+--------------------------------------------------
+Test Case 10: Request Submission with Missing Information
+--------------------------------------------------
+Test Case ID: MF_REQ_002
+Description: Verify that a property request is not submitted when required contact or request information is missing.
+Test Type: Negative
+Priority: Medium
+Prerequisites: The seeker is logged in and is on the Submit Request screen for an available property.
+Test Data: Phone number: (empty) | Message: (empty)
+Test Steps:
+1. Open the Submit Request screen.
+2. Leave the required phone number blank.
+3. Leave the message blank.
+4. Tap the submit button.
+Expected Result: An error message asking the seeker to provide the required contact or request information is displayed, and the request is not submitted.
+Post-conditions: The seeker remains on the request screen and can correct the missing information.
